@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Code2, Layers, FolderKanban, Briefcase, Mail,
-  Phone, MapPin, Menu, X,
+  Phone, MapPin, Menu, X, ArrowUp
 } from "lucide-react";
 
 // Inline SVG brand icons — not available in this lucide-react version
@@ -115,8 +115,9 @@ export function Nav() {
         style={{
           position: "fixed",
           top: "1.25rem",
-          left: "20rem",
-          transform: "translateX(-50%)",
+          left: "0",
+          right: "0",
+          margin: "0 auto",
           zIndex: 1000,
           width: "calc(100% - 3rem)",
           maxWidth: "900px",
@@ -401,6 +402,48 @@ export function Nav() {
           .pill-cta a:not(.btn-primary):not([href^="mailto"]) { display: none; }
         }
       `}</style>
+
+      {/* ── Scroll To Top Button ── */}
+      <AnimatePresence>
+        {scrolled && (
+          <motion.button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              position: "fixed",
+              bottom: "2rem",
+              right: "2rem",
+              zIndex: 999,
+              background: "rgba(123,94,255,0.85)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              borderRadius: "50%",
+              width: "44px",
+              height: "44px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "none",
+              color: "white",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#7B5EFF";
+              e.currentTarget.style.boxShadow = "0 6px 24px rgba(123,94,255,0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(123,94,255,0.85)";
+              e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.4)";
+            }}
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
   );
 }
