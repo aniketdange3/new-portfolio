@@ -50,7 +50,8 @@ export function Loader({ onComplete }: LoaderProps) {
       const tVal = (Math.PI * 2 * idx) / NUM;
       const currentScale = (5.5 + (idx % 3)) * pulse;
       const tx = cx + 16 * Math.pow(Math.sin(tVal), 3) * currentScale;
-      const ty = cy - (13 * Math.cos(tVal) - 5 * Math.cos(2 * tVal) - 2 * Math.cos(3 * tVal) - Math.cos(4 * tVal)) * currentScale;
+      // Shift the heart slightly upward (-40px) to make perfect room for centered text elements below it
+      const ty = cy - 40 - (13 * Math.cos(tVal) - 5 * Math.cos(2 * tVal) - 2 * Math.cos(3 * tVal) - Math.cos(4 * tVal)) * currentScale;
       return { tx, ty };
     };
 
@@ -166,16 +167,23 @@ export function Loader({ onComplete }: LoaderProps) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "fixed",
+            inset: 0,
+            overflow: "hidden"
+          }}
         >
           <canvas ref={canvasRef} style={{ position: "absolute", inset: 0 }} />
 
-          {/* Permanently fixed branding at the top of the shape */}
+          {/* Centered Top Text overlay - perfectly aligned above the shape */}
           <div
             style={{
               position: "absolute",
-              top: "3.5rem",
-              left: "50%",
-              transform: "translateX(-50%)",
+              top: "20%",
               textAlign: "center",
               zIndex: 3,
               width: "calc(100% - 3rem)",
@@ -209,13 +217,11 @@ export function Loader({ onComplete }: LoaderProps) {
             </div>
           </div>
 
-          {/* Progress bar */}
+          {/* Centered Progress bar - positioned below the heart shape */}
           <div
             style={{
               position: "absolute",
-              bottom: "3rem",
-              left: "50%",
-              transform: "translateX(-50%)",
+              top: "70%",
               width: "min(300px, 60vw)",
               zIndex: 3,
             }}
@@ -236,7 +242,7 @@ export function Loader({ onComplete }: LoaderProps) {
             </div>
             <div
               style={{
-                height: "1px",
+                height: "2px",
                 background: "rgba(255,255,255,0.08)",
                 borderRadius: "100px",
                 overflow: "hidden",
@@ -251,36 +257,12 @@ export function Loader({ onComplete }: LoaderProps) {
                 }}
                 initial={{ width: "0%" }}
                 animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.1, ease: "linear" }}
+                transition={{ duration: 0.2, ease: "linear" }}
               />
             </div>
           </div>
 
-          {/* Bottom Heart showing when phase is complete */}
-          <AnimatePresence>
-            {phase === "text" && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: -10 }}
-                transition={{ duration: 0.5, type: "spring" }}
-                style={{
-                  position: "absolute",
-                  bottom: "5rem",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  zIndex: 4,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <div className="heart-beat-container" style={{ fontSize: "2rem" }}>
-                  ❤️
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+
 
           <style>{`
             .heart-beat-container {
