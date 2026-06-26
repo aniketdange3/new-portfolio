@@ -21,11 +21,20 @@ export function Loader({ onComplete }: LoaderProps) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
+    const center = { x: canvas.width / 2, y: canvas.height / 2 };
 
-    // Particle system
+    const handleResize = () => {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      center.x = canvas.width / 2;
+      center.y = canvas.height / 2;
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Particle system configuration for the Heart shape
     const NUM = 220;
+
     type Particle = {
       x: number; y: number;
       tx: number; ty: number;
@@ -36,16 +45,31 @@ export function Loader({ onComplete }: LoaderProps) {
     };
 
     const colors = ["#7B5EFF", "#00D9FF", "#FF5E8A", "#FFB547", "#FFFFFF"];
+
+    const getHeartTarget = (idx: number, cx: number, cy: number, pulse: number) => {
+      const tVal = (Math.PI * 2 * idx) / NUM;
+      const currentScale = (5.5 + (idx % 3)) * pulse;
+      const tx = cx + 16 * Math.pow(Math.sin(tVal), 3) * currentScale;
+      const ty = cy - (13 * Math.cos(tVal) - 5 * Math.cos(2 * tVal) - 2 * Math.cos(3 * tVal) - Math.cos(4 * tVal)) * currentScale;
+      return { tx, ty };
+    };
+
     const particles: Particle[] = Array.from({ length: NUM }, (_, i) => {
       const angle = (Math.PI * 2 * i) / NUM + Math.random() * 0.4;
-      const radius = 260 + Math.random() * 180;
+      const radius = 280 + Math.random() * 200;
+
+      const startX = center.x + Math.cos(angle) * radius;
+      const startY = center.y + Math.sin(angle) * radius;
+
+      const { tx, ty } = getHeartTarget(i, center.x, center.y, 1.0);
+
       return {
-        x: cx + Math.cos(angle) * radius,
-        y: cy + Math.sin(angle) * radius,
-        tx: cx + (Math.random() - 0.5) * 80,
-        ty: cy + (Math.random() - 0.5) * 50,
+        x: startX,
+        y: startY,
+        tx,
+        ty,
         vx: 0, vy: 0,
-        size: 1.2 + Math.random() * 2,
+        size: 1.2 + Math.random() * 2.0,
         color: colors[Math.floor(Math.random() * colors.length)],
         alpha: 0,
       };
@@ -61,17 +85,46 @@ export function Loader({ onComplete }: LoaderProps) {
       // Ease
       const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
+      // Heart pulse beat simulation
+      const pulseSpeed = 0.006;
+      const pulse = 1 + Math.sin(now * pulseSpeed) * 0.08 * eased;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw particles converging
-      particles.forEach((p) => {
+      const cx = center.x;
+      const cy = center.y;
+
+      // Draw connection lines (constellation network)
+      ctx.shadowBlur = 0;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 60) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = particles[i].color;
+            ctx.globalAlpha = (1 - dist / 60) * 0.15 * eased;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particles converging to the pulsing heart shape
+      particles.forEach((p, idx) => {
         p.alpha = Math.min(p.alpha + 0.025, eased);
-        p.x += (p.tx - p.x) * 0.04 * (eased * 2);
-        p.y += (p.ty - p.y) * 0.04 * (eased * 2);
+
+        const { tx, ty } = getHeartTarget(idx, cx, cy, pulse);
+
+        p.x += (tx - p.x) * 0.04 * (eased * 2);
+        p.y += (ty - p.y) * 0.04 * (eased * 2);
 
         ctx.globalAlpha = p.alpha * eased;
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 6;
         ctx.shadowColor = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -88,17 +141,21 @@ export function Loader({ onComplete }: LoaderProps) {
       if (eased < 1) {
         animFrame = requestAnimationFrame(draw);
       } else {
+        setProgress(100);
         setPhase("text");
         setTimeout(() => {
           setPhase("exit");
           setTimeout(onComplete, 800);
-        }, 1000);
+        }, 1200);
       }
     };
 
     animFrame = requestAnimationFrame(draw);
 
-    return () => cancelAnimationFrame(animFrame);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animFrame);
+    };
   }, [onComplete]);
 
   return (
@@ -112,52 +169,45 @@ export function Loader({ onComplete }: LoaderProps) {
         >
           <canvas ref={canvasRef} style={{ position: "absolute", inset: 0 }} />
 
-          {/* ARD initials that appear after particles form */}
-          <AnimatePresence>
-            {phase !== "particles" && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-                transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
-                style={{
-                  position: "absolute",
-                  textAlign: "center",
-                  zIndex: 2,
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: '"Space Grotesk", sans-serif',
-                    fontSize: "clamp(5rem, 15vw, 12rem)",
-                    fontWeight: 700,
-                    letterSpacing: "-0.06em",
-                    lineHeight: 1,
-                    background: "linear-gradient(135deg, #7B5EFF, #00D9FF)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    textShadow: "none",
-                  }}
-                >
-                  AD
-                </div>
-                <div
-                  style={{
-                    fontFamily: '"Space Mono", monospace',
-                    fontSize: "clamp(0.6rem, 1.2vw, 0.8rem)",
-                    letterSpacing: "0.3em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.4)",
-                    marginTop: "1rem",
-                  }}
-                >
-                  Building the Future
-
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Permanently fixed branding at the top of the shape */}
+          <div
+            style={{
+              position: "absolute",
+              top: "3.5rem",
+              left: "50%",
+              transform: "translateX(-50%)",
+              textAlign: "center",
+              zIndex: 3,
+              width: "calc(100% - 3rem)",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: '"Space Grotesk", sans-serif',
+                fontSize: "clamp(1rem, 1.2vw, 1.1rem)",
+                fontWeight: phase === "text" ? 900 : 700,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                color: phase === "text" ? "#FFFFFF" : "rgba(255,255,255,0.9)",
+                textShadow: phase === "text" ? "0 0 15px rgba(255, 94, 138, 0.8)" : "none",
+                transition: "all 0.5s ease",
+              }}
+            >
+              Building the Future Together
+            </div>
+            <div
+              style={{
+                fontFamily: '"Space Mono", monospace',
+                fontSize: "clamp(0.6rem, 1vw, 0.72rem)",
+                letterSpacing: "0.15em",
+                color: "rgba(255,255,255,0.45)",
+                marginTop: "0.6rem",
+                fontStyle: "italic",
+              }}
+            >
+              &ldquo;Where Logic Meets Creativity&rdquo;
+            </div>
+          </div>
 
           {/* Progress bar */}
           <div
@@ -205,6 +255,43 @@ export function Loader({ onComplete }: LoaderProps) {
               />
             </div>
           </div>
+
+          {/* Bottom Heart showing when phase is complete */}
+          <AnimatePresence>
+            {phase === "text" && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                transition={{ duration: 0.5, type: "spring" }}
+                style={{
+                  position: "absolute",
+                  bottom: "5rem",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  zIndex: 4,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <div className="heart-beat-container" style={{ fontSize: "2rem" }}>
+                  ❤️
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <style>{`
+            .heart-beat-container {
+              animation: beat 0.8s infinite alternate cubic-bezier(0.25, 0.8, 0.25, 1);
+              display: inline-block;
+            }
+            @keyframes beat {
+              0% { transform: scale(0.9); opacity: 0.8; }
+              100% { transform: scale(1.2) translateY(-2px); opacity: 1; filter: drop-shadow(0 0 8px #FF5E8A); }
+            }
+          `}</style>
         </motion.div>
       )}
     </AnimatePresence>
