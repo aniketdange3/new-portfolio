@@ -12,9 +12,11 @@ const categories = [
   { id: "ai",       label: "AI & ML" },
 ];
 
+const EASE = [0.19, 1, 0.22, 1] as const;
+
 const fadeUp = {
   hidden:  { opacity: 0, y: 48, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.19, 1, 0.22, 1] } },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
 };
 
 export function Skills() {
@@ -137,7 +139,7 @@ export function Skills() {
                     <motion.div
                       initial={{ width: "0%" }}
                       animate={{ width: inView ? `${skill.level}%` : "0%" }}
-                      transition={{ duration: 1.2, delay: 0.3, ease: [0.19, 1, 0.22, 1] }}
+                      transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
                       style={{
                         height: "100%",
                         background: `linear-gradient(90deg, ${skill.color}, ${skill.color}88)`,

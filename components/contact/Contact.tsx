@@ -4,9 +4,11 @@ import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { personal } from "@/lib/data";
 
+const EASE = [0.19, 1, 0.22, 1] as const;
+
 const fadeUp = {
   hidden:  { opacity: 0, y: 48, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.19, 1, 0.22, 1] } },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
 };
 
 type FormState = "idle" | "sending" | "sent" | "error";
@@ -31,10 +33,10 @@ export function Contact() {
   };
 
   const socialLinks = [
-    { label: "GitHub", href: personal.github,   color: "#FFFFFF" },
-    { label: "LinkedIn", href: personal.linkedin, color: "#0A66C2" },
-    { label: "Twitter", href: personal.twitter,  color: "#1DA1F2" },
-    { label: "Email",  href: `mailto:${personal.email}`, color: "#7B5EFF" },
+    { label: "GitHub",    href: personal.github,                   color: "#FFFFFF" },
+    { label: "LinkedIn",  href: personal.linkedin,                 color: "#0A66C2" },
+    { label: "Email",     href: `mailto:${personal.email}`,        color: "#7B5EFF" },
+    { label: "Phone",     href: `tel:${personal.phone}`,           color: "#00F5A0" },
   ];
 
   return (
@@ -48,7 +50,7 @@ export function Contact() {
           {/* Label */}
           <motion.div variants={fadeUp} style={{ marginBottom: "1rem" }}>
             <span className="text-label" style={{ color: "var(--green)" }}>
-              ✦ &nbsp; 05 — Contact
+              ✦ &nbsp; 08 — Contact
             </span>
           </motion.div>
 

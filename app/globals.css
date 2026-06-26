@@ -333,22 +333,16 @@ body {
   50% { opacity: 1; transform: scaleY(0.6); }
 }
 
-/* ─── Nav ────────────────────────────────────────────────────────── */
+/* ─── Nav (pill version — styles handled inline in Nav.tsx) ─────── */
+/* The .nav class is kept for backward compat but not used */
 .nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 1000;
   height: 72px;
   display: flex;
   align-items: center;
-  transition: background 0.4s, border-color 0.4s;
-}
-.nav.scrolled {
-  background: rgba(6, 6, 10, 0.8);
-  backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--border);
+  pointer-events: none; /* pill handles its own pointer events */
 }
 
 /* ─── Animations ─────────────────────────────────────────────────── */

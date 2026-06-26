@@ -30,14 +30,16 @@ function CountUp({ end, duration = 2, suffix = "" }: { end: number; duration?: n
 
 const stats = [
   { label: "Projects shipped", value: personal.stats.projects, suffix: "+" },
-  { label: "Years building", value: personal.stats.years, suffix: "+" },
+  { label: "Years experience", value: personal.stats.years, suffix: "+" },
   { label: "Happy clients", value: personal.stats.clients, suffix: "+" },
-  { label: "Cups of coffee", value: personal.stats.coffees, suffix: "" },
+  { label: "APIs integrated", value: personal.stats.apis, suffix: "+" },
 ];
+
+const EASE = [0.19, 1, 0.22, 1] as const;
 
 const fadeUp = {
   hidden:  { opacity: 0, y: 48, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.19, 1, 0.22, 1] } },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
 };
 
 export function About() {
@@ -107,7 +109,7 @@ export function About() {
                 {personal.bio}
               </p>
               <div style={{ display: "flex", gap: "1rem", marginTop: "2rem", flexWrap: "wrap" }}>
-                {["React", "Next.js", "AI/ML", "TypeScript", "Node.js"].map((t) => (
+                {["React.js", "Next.js", "TypeScript", "Node.js", "MongoDB", "AI/ML"].map((t) => (
                   <span key={t} className="tag">{t}</span>
                 ))}
               </div>

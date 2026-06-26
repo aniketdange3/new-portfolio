@@ -9,6 +9,7 @@ import { About } from "@/components/about/About";
 import { Skills } from "@/components/skills/Skills";
 import { Projects } from "@/components/projects/Projects";
 import { Experience } from "@/components/experience/Experience";
+import { MoreInfo } from "@/components/moreinfo/MoreInfo";
 import { Contact } from "@/components/contact/Contact";
 import { Footer } from "@/components/ui/Footer";
 
@@ -41,6 +42,9 @@ export default function Home() {
 
             <div className="divider" />
             <Experience />
+
+            <div className="divider" />
+            <MoreInfo />
 
             <div className="divider" />
             <Contact />

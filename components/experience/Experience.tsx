@@ -4,9 +4,11 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { experience } from "@/lib/data";
 
+const EASE = [0.19, 1, 0.22, 1] as const;
+
 const fadeUp = {
   hidden:  { opacity: 0, y: 48, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.19, 1, 0.22, 1] } },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
 };
 
 export function Experience() {
@@ -46,7 +48,7 @@ export function Experience() {
             <motion.div
               initial={{ scaleY: 0 }}
               animate={inView ? { scaleY: 1 } : {}}
-              transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1], delay: 0.4 }}
+              transition={{ duration: 1.2, ease: EASE, delay: 0.4 }}
               style={{
                 position: "absolute",
                 left: "calc(min(200px, 25%) + 1.5rem)",

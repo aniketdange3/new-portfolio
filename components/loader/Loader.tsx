@@ -103,7 +103,7 @@ export function Loader({ onComplete }: LoaderProps) {
 
   return (
     <AnimatePresence>
-      {phase !== "done" && (
+      {phase !== "exit" && (
         <motion.div
           className="loader-overlay"
           initial={{ opacity: 1 }}
