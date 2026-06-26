@@ -152,7 +152,8 @@ export function Loader({ onComplete }: LoaderProps) {
                     marginTop: "1rem",
                   }}
                 >
-                  Loading Experience
+                  Building the Future
+
                 </div>
               </motion.div>
             )}
