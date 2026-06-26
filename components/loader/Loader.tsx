@@ -18,10 +18,10 @@ export function Loader({ onComplete }: LoaderProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width  = window.innerWidth;
+    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const cx = canvas.width  / 2;
+    const cx = canvas.width / 2;
     const cy = canvas.height / 2;
 
     // Particle system
@@ -140,7 +140,7 @@ export function Loader({ onComplete }: LoaderProps) {
                     textShadow: "none",
                   }}
                 >
-                  ARD
+                  AD
                 </div>
                 <div
                   style={{
