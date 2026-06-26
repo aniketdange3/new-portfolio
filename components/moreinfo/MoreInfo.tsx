@@ -4,9 +4,11 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { education, certifications, achievements } from "@/lib/data";
 
+const EASE = [0.19, 1, 0.22, 1] as const;
+
 const fadeUp = {
   hidden:  { opacity: 0, y: 48, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.19, 1, 0.22, 1] } },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
 };
 
 export function MoreInfo() {
