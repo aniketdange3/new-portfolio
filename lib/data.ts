@@ -1,0 +1,145 @@
+export const personal = {
+  name: "Aniket Ramdas Dange",
+  initials: "ARD",
+  title: "Full Stack Engineer",
+  roles: [
+    "Full Stack Engineer",
+    "AI Builder",
+    "Creative Technologist",
+    "Freelance Developer",
+  ],
+  tagline: "I build digital products people remember.",
+  bio: "I craft high-performance web experiences that live at the intersection of engineering rigour and creative vision. From AI-powered SaaS platforms to real-time collaborative tools — I build things that matter.",
+  email: "aniketdange3@gmail.com",
+  github: "https://github.com/aniketdange3",
+  linkedin: "https://linkedin.com/in/aniketdange3",
+  twitter: "https://twitter.com/aniketdange3",
+  location: "India",
+  available: true,
+  stats: {
+    projects: 30,
+    years: 4,
+    clients: 20,
+    coffees: 1840,
+  },
+};
+
+export const skills = [
+  // Frontend
+  { id: "react", label: "React", category: "frontend", level: 95, color: "#61DAFB" },
+  { id: "nextjs", label: "Next.js", category: "frontend", level: 95, color: "#FFFFFF" },
+  { id: "typescript", label: "TypeScript", category: "frontend", level: 90, color: "#3178C6" },
+  { id: "threejs", label: "Three.js", category: "frontend", level: 80, color: "#049EF4" },
+  { id: "framer", label: "Framer Motion", category: "frontend", level: 85, color: "#BB4B96" },
+  { id: "gsap", label: "GSAP", category: "frontend", level: 80, color: "#88CE02" },
+  { id: "tailwind", label: "Tailwind CSS", category: "frontend", level: 95, color: "#06B6D4" },
+  // Backend
+  { id: "nodejs", label: "Node.js", category: "backend", level: 90, color: "#339933" },
+  { id: "python", label: "Python", category: "backend", level: 85, color: "#3776AB" },
+  { id: "fastapi", label: "FastAPI", category: "backend", level: 80, color: "#009688" },
+  { id: "prisma", label: "Prisma", category: "backend", level: 85, color: "#2D3748" },
+  { id: "graphql", label: "GraphQL", category: "backend", level: 75, color: "#E10098" },
+  // Cloud & DevOps
+  { id: "aws", label: "AWS", category: "cloud", level: 75, color: "#FF9900" },
+  { id: "docker", label: "Docker", category: "cloud", level: 80, color: "#2496ED" },
+  { id: "vercel", label: "Vercel", category: "cloud", level: 90, color: "#FFFFFF" },
+  { id: "github", label: "GitHub Actions", category: "cloud", level: 80, color: "#2088FF" },
+  // AI
+  { id: "openai", label: "OpenAI", category: "ai", level: 85, color: "#00A67E" },
+  { id: "gemini", label: "Gemini AI", category: "ai", level: 80, color: "#8AB4F8" },
+  { id: "langchain", label: "LangChain", category: "ai", level: 75, color: "#1C3C3C" },
+  { id: "rag", label: "RAG Systems", category: "ai", level: 75, color: "#7B5EFF" },
+  // Databases
+  { id: "postgres", label: "PostgreSQL", category: "backend", level: 85, color: "#4169E1" },
+  { id: "mongodb", label: "MongoDB", category: "backend", level: 80, color: "#47A248" },
+  { id: "redis", label: "Redis", category: "backend", level: 75, color: "#DC382D" },
+];
+
+export const skillConnections = [
+  ["react", "nextjs"], ["react", "typescript"], ["react", "framer"],
+  ["react", "threejs"], ["nextjs", "typescript"], ["nextjs", "tailwind"],
+  ["nextjs", "vercel"], ["nodejs", "fastapi"], ["nodejs", "prisma"],
+  ["nodejs", "graphql"], ["python", "fastapi"], ["python", "openai"],
+  ["python", "langchain"], ["openai", "langchain"], ["openai", "rag"],
+  ["gemini", "rag"], ["langchain", "rag"], ["prisma", "postgres"],
+  ["prisma", "mongodb"], ["docker", "aws"], ["github", "vercel"],
+  ["redis", "nodejs"],
+];
+
+export const projects = [
+  {
+    id: "ai-saas",
+    title: "NeuralFlow",
+    subtitle: "AI-Powered SaaS Platform",
+    description: "A full-stack SaaS platform with RAG-based knowledge retrieval, real-time AI chat, multi-tenant architecture, and usage-based billing. 40k+ monthly active users.",
+    tags: ["Next.js", "Python", "OpenAI", "PostgreSQL", "Stripe", "Redis"],
+    color: "#7B5EFF",
+    accent: "#00D9FF",
+    metrics: { users: "40k+", uptime: "99.97%", latency: "< 120ms", revenue: "$8k MRR" },
+    links: { github: "#", live: "#" },
+    featured: true,
+  },
+  {
+    id: "collab-tool",
+    title: "Synapse",
+    subtitle: "Real-Time Collaborative IDE",
+    description: "Browser-based collaborative code editor with OT algorithm, AI code completion, voice chat, and live preview. Built for engineering teams.",
+    tags: ["React", "WebSockets", "Monaco Editor", "Node.js", "AWS"],
+    color: "#FF5E8A",
+    accent: "#FFB547",
+    metrics: { concurrent: "500+", latency: "< 50ms", repos: "12k+", stars: "1.2k" },
+    links: { github: "#", live: "#" },
+    featured: true,
+  },
+  {
+    id: "ecommerce",
+    title: "Phantom Store",
+    subtitle: "Next-Gen E-Commerce Engine",
+    description: "Headless commerce platform with AI product recommendations, 3D product viewer, edge-cached catalog, and sub-100ms page loads globally.",
+    tags: ["Next.js", "Three.js", "Shopify API", "Edge Runtime", "AI"],
+    color: "#00D9FF",
+    accent: "#7B5EFF",
+    metrics: { conversion: "+34%", speed: "98 Perf", products: "50k+", revenue: "$2M+ GMV" },
+    links: { github: "#", live: "#" },
+    featured: true,
+  },
+  {
+    id: "analytics",
+    title: "PulseBoard",
+    subtitle: "Real-Time Analytics Dashboard",
+    description: "WebGL-powered analytics dashboard with streaming data visualization, anomaly detection, and natural language query interface.",
+    tags: ["React", "D3.js", "WebGL", "ClickHouse", "Python", "GPT-4"],
+    color: "#FFB547",
+    accent: "#FF5E8A",
+    metrics: { events: "1B+/day", dashboards: "2k+", queries: "NL-powered", p99: "< 200ms" },
+    links: { github: "#", live: "#" },
+    featured: false,
+  },
+];
+
+export const experience = [
+  {
+    year: "2024 – Present",
+    role: "Senior Full Stack Engineer",
+    company: "Freelance / Independent",
+    description: "Building premium digital products for startups and scale-ups across AI, fintech, and SaaS verticals.",
+    achievements: ["Delivered 12+ production apps", "Average 99.9% uptime across client deployments", "AI integration for 8 enterprise clients"],
+    color: "#7B5EFF",
+  },
+  {
+    year: "2022 – 2024",
+    role: "Full Stack Developer",
+    company: "Tech Startup",
+    description: "Led frontend architecture and built core product features for a B2B SaaS platform serving 200+ enterprise clients.",
+    achievements: ["Reduced LCP by 68%", "Shipped real-time collaboration features", "Mentored 3 junior engineers"],
+    color: "#FF5E8A",
+  },
+  {
+    year: "2021 – 2022",
+    role: "Frontend Engineer",
+    company: "Digital Agency",
+    description: "Crafted award-worthy web experiences for global brands, specializing in motion design and performance optimization.",
+    achievements: ["Won 2 Awwwards honorable mentions", "Built 30+ client websites", "Introduced design system used across 15 projects"],
+    color: "#00D9FF",
+  },
+];
