@@ -24,11 +24,14 @@ export function Skills() {
   const inView = useInView(sectionRef, { once: true, margin: "-10%" });
   const [activeCategory, setActiveCategory] = useState("all");
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const filteredSkills =
     activeCategory === "all"
       ? skills
       : skills.filter((s) => s.category === activeCategory);
+
+  const displayedSkills = showAll ? filteredSkills : filteredSkills.slice(0, 10);
 
   const getConnected = (id: string) =>
     skillConnections
@@ -64,7 +67,7 @@ export function Skills() {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
+                onClick={() => { setActiveCategory(cat.id); setShowAll(false); }}
                 data-cursor-hover
                 style={{
                   padding: "0.5rem 1.2rem",
@@ -89,11 +92,11 @@ export function Skills() {
             variants={fadeUp}
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-              gap: "1rem",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+              gap: "1.2rem",
             }}
           >
-            {filteredSkills.map((skill) => {
+            {displayedSkills.map((skill) => {
               const connected = getConnected(skill.id);
               const isHighlighted =
                 !hoveredSkill ||
@@ -112,7 +115,7 @@ export function Skills() {
                   data-cursor-hover
                   className="glass-card"
                   style={{
-                    padding: "1.25rem",
+                    padding: "1.5rem",
                     borderRadius: "16px",
                     cursor: "none",
                     borderColor:
@@ -124,57 +127,76 @@ export function Skills() {
                         ? `0 0 24px ${skill.color}33`
                         : "none",
                     transition: "border-color 0.3s, box-shadow 0.3s",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
                   }}
                 >
-                  {/* Level bar */}
-                  <div
-                    style={{
-                      height: "3px",
-                      borderRadius: "100px",
-                      background: "rgba(255,255,255,0.07)",
-                      marginBottom: "1rem",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <motion.div
-                      initial={{ width: "0%" }}
-                      animate={{ width: inView ? `${skill.level}%` : "0%" }}
-                      transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
+                  <div>
+                    {/* Level bar */}
+                    <div
                       style={{
-                        height: "100%",
-                        background: `linear-gradient(90deg, ${skill.color}, ${skill.color}88)`,
+                        height: "3px",
                         borderRadius: "100px",
-                        boxShadow: `0 0 8px ${skill.color}66`,
+                        background: "rgba(255,255,255,0.07)",
+                        marginBottom: "1rem",
+                        overflow: "hidden",
                       }}
-                    />
-                  </div>
+                    >
+                      <motion.div
+                        initial={{ width: "0%" }}
+                        animate={{ width: inView ? `${skill.level}%` : "0%" }}
+                        transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
+                        style={{
+                          height: "100%",
+                          background: `linear-gradient(90deg, ${skill.color}, ${skill.color}88)`,
+                          borderRadius: "100px",
+                          boxShadow: `0 0 8px ${skill.color}66`,
+                        }}
+                      />
+                    </div>
 
-                  <div
-                    style={{
-                      fontFamily: '"Space Grotesk", sans-serif',
-                      fontWeight: 600,
-                      fontSize: "0.9rem",
-                      color: hoveredSkill === skill.id ? skill.color : "var(--text-primary)",
-                      transition: "color 0.3s",
-                      marginBottom: "0.3rem",
-                    }}
-                  >
-                    {skill.label}
-                  </div>
+                    <div
+                      style={{
+                        fontFamily: '"Space Grotesk", sans-serif',
+                        fontWeight: 600,
+                        fontSize: "0.95rem",
+                        color: hoveredSkill === skill.id ? skill.color : "var(--text-primary)",
+                        transition: "color 0.3s",
+                        marginBottom: "0.3rem",
+                      }}
+                    >
+                      {skill.label}
+                    </div>
 
-                  <div
-                    className="text-label"
-                    style={{
-                      color: "var(--text-tertiary)",
-                      fontSize: "0.6rem",
-                    }}
-                  >
-                    {skill.category.toUpperCase()}
+                    <div
+                      className="text-label"
+                      style={{
+                        color: "var(--text-tertiary)",
+                        fontSize: "0.6rem",
+                        marginBottom: "0.75rem",
+                      }}
+                    >
+                      {skill.category.toUpperCase()}
+                    </div>
+
+                    {skill.desc && (
+                      <p
+                        style={{
+                          color: "var(--text-secondary)",
+                          fontSize: "0.75rem",
+                          lineHeight: 1.5,
+                          marginBottom: "0",
+                        }}
+                      >
+                        {skill.desc}
+                      </p>
+                    )}
                   </div>
 
                   {/* Connection indicator */}
                   {hoveredSkill === skill.id && connected.length > 0 && (
-                    <div style={{ marginTop: "0.75rem" }}>
+                    <div style={{ marginTop: "1rem" }}>
                       <div className="text-label" style={{ color: "var(--text-tertiary)", marginBottom: "0.3rem" }}>
                         CONNECTS WITH
                       </div>
@@ -204,6 +226,29 @@ export function Skills() {
               );
             })}
           </motion.div>
+
+          {/* Toggle Button */}
+          {filteredSkills.length > 10 && (
+            <motion.div
+              variants={fadeUp}
+              style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}
+            >
+              <button
+                onClick={() => setShowAll(!showAll)}
+                data-cursor-hover
+                className="btn-ghost"
+                style={{
+                  padding: "0.6rem 2rem",
+                  borderRadius: "100px",
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                  cursor: "none",
+                }}
+              >
+                {showAll ? "Show Less" : "Show More"}
+              </button>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </section>

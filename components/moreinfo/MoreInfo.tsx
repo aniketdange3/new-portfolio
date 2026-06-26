@@ -211,7 +211,7 @@ export function MoreInfo() {
                 key={i}
                 initial={{ opacity: 0, x: -24 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.4 + i * 0.08, duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+                transition={{ delay: 0.4 + i * 0.08, duration: 0.6, ease: EASE }}
                 className="glass-card"
                 style={{
                   padding: "1.25rem 2rem",
