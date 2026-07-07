@@ -68,7 +68,6 @@ export function Skills() {
               <button
                 key={cat.id}
                 onClick={() => { setActiveCategory(cat.id); setShowAll(false); }}
-                data-cursor-hover
                 style={{
                   padding: "0.5rem 1.2rem",
                   borderRadius: "100px",
@@ -78,7 +77,7 @@ export function Skills() {
                   border: `1px solid ${activeCategory === cat.id ? "var(--cyan)" : "var(--border)"}`,
                   background: activeCategory === cat.id ? "rgba(0, 217, 255, 0.1)" : "transparent",
                   color: activeCategory === cat.id ? "var(--cyan)" : "var(--text-secondary)",
-                  cursor: "none",
+                  cursor: "pointer",
                   transition: "all 0.25s",
                 }}
               >
@@ -112,12 +111,10 @@ export function Skills() {
                   transition={{ duration: 0.3 }}
                   onHoverStart={() => setHoveredSkill(skill.id)}
                   onHoverEnd={() => setHoveredSkill(null)}
-                  data-cursor-hover
                   className="glass-card"
                   style={{
                     padding: "1.5rem",
                     borderRadius: "16px",
-                    cursor: "none",
                     borderColor:
                       hoveredSkill === skill.id
                         ? skill.color
@@ -235,14 +232,13 @@ export function Skills() {
             >
               <button
                 onClick={() => setShowAll(!showAll)}
-                data-cursor-hover
                 className="btn-ghost"
                 style={{
                   padding: "0.6rem 2rem",
                   borderRadius: "100px",
                   fontSize: "0.8rem",
                   fontWeight: 600,
-                  cursor: "none",
+                  cursor: "pointer",
                 }}
               >
                 {showAll ? "Show Less" : "Show More"}

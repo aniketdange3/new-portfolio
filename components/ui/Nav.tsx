@@ -149,11 +149,10 @@ export function Nav() {
           {/* ── Logo ── */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            data-cursor-hover
             style={{
               background: "none",
               border: "none",
-              cursor: "none",
+              cursor: "pointer",
               display: "flex",
               alignItems: "center",
               gap: "0.6rem",
@@ -191,7 +190,6 @@ export function Nav() {
                 <button
                   key={item.label}
                   onClick={() => go(item.href)}
-                  data-cursor-hover
                   aria-current={isActive ? "page" : undefined}
                   className={`nav-item-btn ${isActive ? "active" : ""}`}
                   style={{
@@ -205,7 +203,7 @@ export function Nav() {
                     fontWeight: isActive ? 600 : 500,
                     color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
                     background: isActive ? "rgba(123,94,255,0.2)" : "transparent",
-                    cursor: "none",
+                    cursor: "pointer",
                     transition: "all 0.25s",
                   }}
                   onMouseEnter={(e) => {
@@ -247,7 +245,6 @@ export function Nav() {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="hamburger-pill"
-              data-cursor-hover
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               style={{
                 background: "rgba(255,255,255,0.06)",
@@ -258,7 +255,7 @@ export function Nav() {
                 display: "none",
                 alignItems: "center",
                 justifyContent: "center",
-                cursor: "none",
+                cursor: "pointer",
                 color: "white",
                 flexShrink: 0,
               }}
@@ -312,9 +309,8 @@ export function Nav() {
                   fontSize: "0.95rem",
                   fontWeight: 500,
                   color: activeSection === item.href.slice(1) ? "var(--violet)" : "rgba(255,255,255,0.7)",
-                  cursor: "none",
+                  cursor: "pointer",
                 }}
-                data-cursor-hover
               >
                 {item.icon}
                 {item.label}
@@ -339,9 +335,8 @@ export function Nav() {
                   padding: "0.5rem 0.75rem", borderRadius: "8px",
                   background: "rgba(123,94,255,0.1)", border: "1px solid rgba(123,94,255,0.2)",
                   color: "var(--violet)", fontSize: "0.78rem", fontFamily: '"Space Grotesk", sans-serif',
-                  textDecoration: "none", cursor: "none",
+                  textDecoration: "none", cursor: "pointer",
                 }}
-                data-cursor-hover
               >
                 <Mail size={12} /> Email
               </a>
@@ -353,9 +348,8 @@ export function Nav() {
                   padding: "0.5rem 0.75rem", borderRadius: "8px",
                   background: "rgba(10,102,194,0.1)", border: "1px solid rgba(10,102,194,0.2)",
                   color: "#0A66C2", fontSize: "0.78rem", fontFamily: '"Space Grotesk", sans-serif',
-                  textDecoration: "none", cursor: "none",
+                  textDecoration: "none", cursor: "pointer",
                 }}
-                data-cursor-hover
               >
                 <LinkedInIcon size={12} /> LinkedIn
               </a>
@@ -367,9 +361,8 @@ export function Nav() {
                   padding: "0.5rem 0.75rem", borderRadius: "8px",
                   background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
                   color: "rgba(255,255,255,0.7)", fontSize: "0.78rem", fontFamily: '"Space Grotesk", sans-serif',
-                  textDecoration: "none", cursor: "none",
+                  textDecoration: "none", cursor: "pointer",
                 }}
-                data-cursor-hover
               >
                 <GithubIcon size={12} /> GitHub
               </a>
@@ -425,7 +418,7 @@ export function Nav() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              cursor: "none",
+              cursor: "pointer",
               color: "white",
               boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
               backdropFilter: "blur(8px)",

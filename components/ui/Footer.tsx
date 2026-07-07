@@ -70,9 +70,9 @@ export function Footer() {
             }}
           >
             Built with
-            <span style={{ color: "var(--violet)" }}>Next.js 15</span>
+            <span style={{ color: "var(--violet)" }}>Next.js 16</span>
             +
-            <span style={{ color: "var(--cyan)" }}>Three.js</span>
+            <span style={{ color: "var(--cyan)" }}>Framer Motion</span>
             +
             <span style={{ color: "var(--rose)" }}>GSAP</span>
           </div>
@@ -91,7 +91,6 @@ export function Footer() {
                 href="mailto:the.aniket508@email.com"
                 className="footer-social-link"
                 aria-label="Email"
-                data-cursor-hover
               >
                 <Mail size={16} />
               </a>
@@ -99,7 +98,6 @@ export function Footer() {
                 href="tel:+919665540016"
                 className="footer-social-link"
                 aria-label="Phone"
-                data-cursor-hover
               >
                 <Phone size={16} />
               </a>
@@ -109,7 +107,6 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="footer-social-link"
                 aria-label="GitHub"
-                data-cursor-hover
               >
                 <GithubIcon size={16} />
               </a>
@@ -119,7 +116,6 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="footer-social-link"
                 aria-label="LinkedIn"
-                data-cursor-hover
               >
                 <LinkedInIcon size={16} />
               </a>
@@ -138,7 +134,7 @@ export function Footer() {
           align-items: center;
           justify-content: center;
           transition: color 0.25s, transform 0.25s;
-          cursor: none;
+          cursor: pointer;
         }
         .footer-social-link:hover {
           color: #00D9FF;

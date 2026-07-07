@@ -8,7 +8,7 @@
 /* ─── CSS Custom Properties ──────────────────────────────────────── */
 :root {
   /* Core palette */
-  --void:       #06060A;
+  --void:       #080A10;
   --void-2:     #0C0C14;
   --void-3:     #12121E;
   --surface:    #1A1A2E;
@@ -92,7 +92,12 @@ body {
   color: var(--text-primary);
   font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
   overflow-x: hidden;
-  cursor: none; /* Custom cursor */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+button, a, [role="button"] {
+  cursor: pointer;
 }
 
 ::selection {
@@ -210,7 +215,6 @@ body {
   color: white;
   background: linear-gradient(var(--grad-angle), var(--color-stop-1), var(--color-stop-2));
   border: none;
-  cursor: none;
   overflow: hidden;
   transition: --grad-angle 0.6s, transform 0.2s var(--ease-spring), box-shadow 0.3s;
   animation: gradient-shift 4s ease infinite alternate;
@@ -242,7 +246,6 @@ body {
   color: var(--text-primary);
   background: transparent;
   border: 1px solid var(--border-bright);
-  cursor: none;
   transition: border-color 0.3s, background 0.3s, transform 0.2s var(--ease-spring);
 }
 .btn-ghost:hover {
@@ -283,37 +286,7 @@ body {
   background: linear-gradient(90deg, transparent, var(--border-bright) 30%, var(--border-bright) 70%, transparent);
 }
 
-/* ─── Cursor ─────────────────────────────────────────────────────── */
-.cursor-dot, .cursor-ring {
-  position: fixed;
-  pointer-events: none;
-  z-index: 99999;
-  border-radius: 50%;
-  mix-blend-mode: difference;
-}
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-  background: white;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, opacity 0.2s;
-}
-.cursor-ring {
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid rgba(255,255,255,0.7);
-  transform: translate(-50%, -50%);
-  transition: width 0.4s var(--ease-out-expo), height 0.4s var(--ease-out-expo), border-color 0.3s, opacity 0.3s;
-}
-.cursor-ring.hovering {
-  width: 56px;
-  height: 56px;
-  border-color: var(--violet);
-}
-.cursor-ring.clicking {
-  width: 20px;
-  height: 20px;
-}
+
 
 /* ─── Scroll indicator ───────────────────────────────────────────── */
 .scroll-indicator {
@@ -402,26 +375,12 @@ body {
   color: var(--text-primary);
   background: rgba(123, 94, 255, 0.08);
 }
-
-/* ─── Loader ─────────────────────────────────────────────────────── */
-.loader-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100000;
-  background: var(--void);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 /* ─── Canvas / WebGL ─────────────────────────────────────────────── */
 canvas { display: block; }
 
 /* ─── Mobile ─────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   body { cursor: auto; }
-  .cursor-dot, .cursor-ring { display: none; }
 }
 
 /* ─── Reduced Motion ─────────────────────────────────────────────── */

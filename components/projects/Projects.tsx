@@ -31,12 +31,10 @@ function ProjectCard({
       transition={{ delay: index * 0.08 }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      data-cursor-hover
       style={{
         position: "relative",
         borderRadius: "24px",
         overflow: "hidden",
-        cursor: "none",
         background: `linear-gradient(135deg, ${project.color}12 0%, ${project.accent}08 100%)`,
         border: `1px solid ${hovered ? project.color + "40" : "rgba(255,255,255,0.07)"}`,
         transition: "border-color 0.4s, transform 0.4s",
@@ -169,7 +167,6 @@ function ProjectCard({
               padding: "0.65rem 1.5rem",
               background: `linear-gradient(135deg, ${project.color}, ${project.accent})`,
             }}
-            data-cursor-hover
           >
             Live Preview →
           </a>
@@ -183,7 +180,6 @@ function ProjectCard({
               fontSize: "0.85rem",
               padding: "0.65rem 1.5rem",
             }}
-            data-cursor-hover
           >
             GitHub
           </a>

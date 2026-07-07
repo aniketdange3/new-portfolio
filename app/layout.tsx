@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 
 export const metadata: Metadata = {
   title: "Aniket Ramdas Dange — Full Stack Engineer & AI Builder",
@@ -58,7 +57,6 @@ export default function RootLayout({
       </head>
       <body>
         <div className="noise-overlay" aria-hidden="true" />
-        <CustomCursor />
         <SmoothScrollProvider>
           {children}
         </SmoothScrollProvider>

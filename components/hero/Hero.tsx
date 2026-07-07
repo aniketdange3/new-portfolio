@@ -1,17 +1,17 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { personal } from "@/lib/data";
-import { HeroScene } from "@/components/three/HeroScene";
 import {
   MapPin, Mail, Phone,
-  Code2, Cpu, Layers, ArrowRight, ExternalLink
+  Code2, Cpu, Layers, ArrowRight, ExternalLink,
+  Download, CheckCircle2
 } from "lucide-react";
 
 const EASE = [0.19, 1, 0.22, 1] as const;
 
-// Inline SVG brand icons (Github + LinkedIn not in this lucide-react version)
+// Inline SVG brand icons
 function GithubIcon({ size = 14 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -19,6 +19,7 @@ function GithubIcon({ size = 14 }: { size?: number }) {
     </svg>
   );
 }
+
 function LinkedInIcon({ size = 14 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -49,11 +50,11 @@ function AnimatedWord({
         verticalAlign: "bottom",
         ...(gradient
           ? {
-            background: "linear-gradient(135deg, #7B5EFF, #00D9FF)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }
+              background: "linear-gradient(135deg, #7B5EFF, #00D9FF)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }
           : {}),
       }}
       className={className}
@@ -82,9 +83,6 @@ export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [downloadState, setDownloadState] = useState<"idle" | "loading" | "done">("idle");
   const [progress, setProgress] = useState(0);
-  const [typedText, setTypedText] = useState("");
-  const [showDetails, setShowDetails] = useState(false);
-  const [visibleLines, setVisibleLines] = useState(0);
 
   const startDownload = () => {
     if (downloadState !== "idle") return;
@@ -109,59 +107,14 @@ export function Hero() {
         }
         return prev + 10;
       });
-    }, 150);
+    }, 120);
   };
 
-  const ctaRef1 = useRef<HTMLButtonElement>(null);
-  const ctaRef2 = useRef<HTMLButtonElement>(null);
-
   useEffect(() => {
-    const t = setTimeout(() => setIsVisible(true), 300);
+    const t = setTimeout(() => setIsVisible(true), 150);
     const iv = setInterval(() => setRoleIndex((i) => (i + 1) % roles.length), 2800);
     return () => { clearTimeout(t); clearInterval(iv); };
   }, []);
-  useEffect(() => {
-    if (!isVisible) return;
-    const fullText = "cat contact_info.txt";
-    let index = 0;
-    const interval = setInterval(() => {
-      setTypedText((prev) => prev + fullText[index]);
-      index++;
-      if (index >= fullText.length) {
-        clearInterval(interval);
-        setTimeout(() => {
-          setShowDetails(true);
-          let currentLine = 0;
-          const lineInterval = setInterval(() => {
-            currentLine++;
-            setVisibleLines(currentLine);
-            if (currentLine >= 5) {
-              clearInterval(lineInterval);
-            }
-          }, 250);
-        }, 300);
-      }
-    }, 70);
-    return () => clearInterval(interval);
-  }, [isVisible]);
-  // Magnetic button logic
-  const useMag = (ref: React.RefObject<HTMLButtonElement | null>) => {
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const sx = useSpring(x, { stiffness: 500, damping: 35 });
-    const sy = useSpring(y, { stiffness: 500, damping: 35 });
-    const onMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!ref.current) return;
-      const r = ref.current.getBoundingClientRect();
-      x.set((e.clientX - (r.left + r.width / 2)) * 0.3);
-      y.set((e.clientY - (r.top + r.height / 2)) * 0.3);
-    };
-    const onLeave = () => { x.set(0); y.set(0); };
-    return { sx, sy, onMove, onLeave };
-  };
-
-  const mag1 = useMag(ctaRef1);
-  const mag2 = useMag(ctaRef2);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 30, filter: "blur(8px)" },
@@ -171,19 +124,11 @@ export function Hero() {
     }),
   } as const;
 
-  // Quick info items with icons
   const infoItems = [
     { icon: <MapPin size={12} />, text: "Nagpur, MH" },
     { icon: <Code2 size={12} />, text: "MERN Stack" },
     { icon: <Cpu size={12} />, text: "AI Builder" },
     { icon: <Layers size={12} />, text: "3+ Years" },
-  ];
-
-  const contactItems = [
-    { icon: <Mail size={12} />, text: "aniket.dange@email.com", href: "mailto:aniket.dange@email.com" },
-    { icon: <Phone size={12} />, text: "+91 9665540016", href: "tel:+919665540016" },
-    { icon: <GithubIcon size={12} />, text: "github.com/aniketdange3", href: "https://github.com/aniketdange3" },
-    { icon: <LinkedInIcon size={12} />, text: "linkedin.com/in/aniket508", href: "https://www.linkedin.com/in/aniket508/" },
   ];
 
   return (
@@ -197,26 +142,21 @@ export function Hero() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        paddingTop: "80px", // account for pill nav
+        paddingTop: "80px",
       }}
     >
-      {/* WebGL */}
-      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        <HeroScene />
-      </div>
-
-      {/* Vignette */}
-      <div
+      {/* Ambient background glows */}
+      <div 
         aria-hidden
         style={{
-          position: "absolute", inset: 0,
-          background:
-            "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(6,6,10,0.75) 100%)",
-          zIndex: 1, pointerEvents: "none",
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "var(--grad-hero)",
+          zIndex: 0,
+          pointerEvents: "none",
         }}
       />
 
-      {/* ── Content ── */}
       <div
         className="container hero-grid"
         style={{
@@ -249,7 +189,7 @@ export function Hero() {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              style={{ marginBottom: "1.75rem" }}
+              style={{ marginBottom: "1.5rem" }}
             >
               <span
                 style={{
@@ -281,39 +221,38 @@ export function Hero() {
             </motion.div>
           )}
 
-          {/* ── Name — smaller, character-level animation ── */}
+          {/* Name */}
           {isVisible && (
             <h1
               style={{
                 fontFamily: '"Space Grotesk", sans-serif',
                 fontWeight: 700,
-                lineHeight: 1,
+                lineHeight: 1.05,
                 letterSpacing: "-0.03em",
-                fontSize: "clamp(2.5rem, 5.5vw, 5rem)",
+                fontSize: "clamp(2.5rem, 5.5vw, 4.5rem)",
                 marginBottom: "0.5rem",
               }}
             >
               <span style={{ display: "block", marginBottom: "0.1em" }}>
                 <AnimatedWord text="Aniket" delay={0.1} />
               </span>
-
               <span style={{ display: "block" }}>
-                <AnimatedWord text="Dange" delay={0.55} />
+                <AnimatedWord text="Dange" delay={0.4} />
               </span>
             </h1>
           )}
 
-          {/* Divider line — draws in */}
+          {/* Divider line */}
           {isVisible && (
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ delay: 0.85, duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+              transition={{ delay: 0.7, duration: 0.8, ease: EASE }}
               style={{
                 width: "160px",
                 height: "1px",
                 background: "linear-gradient(90deg, var(--violet), var(--cyan), transparent)",
-                margin: "1.5rem 0",
+                margin: "1.25rem 0",
                 transformOrigin: "left",
               }}
             />
@@ -322,14 +261,14 @@ export function Hero() {
           {/* Cycling role */}
           {isVisible && (
             <motion.div
-              custom={0.9}
+              custom={0.8}
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               style={{
                 height: "clamp(1.6rem, 3vw, 2.4rem)",
                 overflow: "hidden",
-                marginBottom: "1.5rem",
+                marginBottom: "1.25rem",
                 display: "flex",
                 alignItems: "center",
               }}
@@ -340,7 +279,7 @@ export function Hero() {
                   initial={{ y: "100%", opacity: 0, filter: "blur(6px)" }}
                   animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
                   exit={{ y: "-100%", opacity: 0, filter: "blur(6px)" }}
-                  transition={{ duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+                  transition={{ duration: 0.45, ease: EASE }}
                   style={{
                     fontFamily: '"Space Grotesk", sans-serif',
                     fontWeight: 600,
@@ -359,7 +298,7 @@ export function Hero() {
           {/* Quick info pills */}
           {isVisible && (
             <motion.div
-              custom={1.1}
+              custom={0.9}
               variants={fadeUp}
               initial="hidden"
               animate="visible"
@@ -375,7 +314,7 @@ export function Hero() {
                   key={i}
                   initial={{ opacity: 0, scale: 0.85 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1.1 + i * 0.07, duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+                  transition={{ delay: 0.9 + i * 0.05, duration: 0.4, ease: EASE }}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -401,7 +340,7 @@ export function Hero() {
           {/* Tagline */}
           {isVisible && (
             <motion.p
-              custom={1.25}
+              custom={1.05}
               variants={fadeUp}
               initial="hidden"
               animate="visible"
@@ -410,6 +349,7 @@ export function Hero() {
                 fontSize: "clamp(0.9rem, 1.6vw, 1.05rem)",
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
+                maxWidth: "500px",
               }}
             >
               Results-driven Full Stack Developer with{" "}
@@ -423,189 +363,126 @@ export function Hero() {
           {/* CTA Buttons */}
           {isVisible && (
             <motion.div
-              custom={1.5}
+              custom={1.2}
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap" }}
             >
-              <motion.button
-                ref={ctaRef1}
+              <button
                 className="btn-primary"
-                onMouseMove={mag1.onMove}
-                onMouseLeave={mag1.onLeave}
-                style={{ x: mag1.sx, y: mag1.sy, gap: "0.5rem" }}
                 onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                 aria-label="Let's work together"
+                style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
               >
                 <span>Let&apos;s build together</span>
                 <ArrowRight size={15} />
-              </motion.button>
-              <motion.button
-                ref={ctaRef2}
+              </button>
+              <button
                 className="btn-ghost"
-                onMouseMove={mag2.onMove}
-                onMouseLeave={mag2.onLeave}
-                style={{ x: mag2.sx, y: mag2.sy, gap: "0.5rem" }}
                 onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
                 aria-label="View my work"
+                style={{ cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}
               >
                 <span>View Projects</span>
                 <ExternalLink size={13} />
-              </motion.button>
+              </button>
             </motion.div>
           )}
         </div>
 
-        {/* Right Column: Styled Terminal Card */}
+        {/* Right Column: Sleek Glassmorphic Profile Card */}
         {isVisible && (
           <motion.div
-            custom={1.4}
+            custom={1.3}
             variants={fadeUp}
             initial="hidden"
             animate="visible"
             className="hero-right"
             style={{ display: "flex", justifyContent: "center", width: "100%" }}
           >
-            <div className="terminal-card">
-              <div className="terminal_toolbar">
-                <div className="butt">
-                  <span className="btn red" />
-                  <span className="btn yellow" />
-                  <span className="btn green" />
+            <div className="profile-glass-card">
+              {/* Card Header with Initials Badge */}
+              <div className="profile-card-header">
+                <div className="initials-badge">
+                  <span>AD</span>
                 </div>
-                <p className="user">aniketdange@admin: ~</p>
-                <button className="add_tab">+</button>
+                <div>
+                  <h3 className="profile-name">Aniket Ramdas Dange</h3>
+                  <p className="profile-title">Full Stack Engineer</p>
+                </div>
               </div>
-              <div className="terminal_body">
-                <div className="terminal_promt">
-                  <span className="terminal_user">aniketdange@admin:</span>
-                  <span className="terminal_location">~</span>
-                  <span className="terminal_bling">$</span>
-                  <span className="terminal_text">{typedText}</span>
-                  {!showDetails && <span className="terminal_cursor" />}
+
+              <div className="profile-divider" />
+
+              {/* Grid of Key Focus Details */}
+              <div className="profile-details-grid">
+                <div className="detail-item">
+                  <span className="detail-label">Location</span>
+                  <span className="detail-value">Nagpur, India</span>
                 </div>
-                
-                {showDetails && (
-                  <div className="terminal_content">
-                    {visibleLines >= 1 && (
-                      <motion.p
-                        initial={{ opacity: 0, x: -5 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <span className="terminal_key">email:</span>{" "}
-                        <a href="mailto:the.aniket508@email.com" className="terminal_link">
-                          the.aniket508@email.com
-                        </a>
-                      </motion.p>
-                    )}
-                    {visibleLines >= 2 && (
-                      <motion.p
-                        initial={{ opacity: 0, x: -5 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <span className="terminal_key">phone:</span>{" "}
-                        <a href="tel:+919665540016" className="terminal_link">
-                          +91 9665540016
-                        </a>
-                      </motion.p>
-                    )}
-                    {visibleLines >= 3 && (
-                      <motion.p
-                        initial={{ opacity: 0, x: -5 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <span className="terminal_key">github:</span>{" "}
-                        <a
-                          href="https://github.com/aniketdange3"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="terminal_link"
-                        >
-                          github.com/aniketdange3
-                        </a>
-                      </motion.p>
-                    )}
-                    {visibleLines >= 4 && (
-                      <motion.p
-                        initial={{ opacity: 0, x: -5 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <span className="terminal_key">linkedin:</span>{" "}
-                        <a
-                          href="https://www.linkedin.com/in/aniket508/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="terminal_link"
-                        >
-                          linkedin.com/in/aniket508
-                        </a>
-                      </motion.p>
-                    )}
-                    {visibleLines >= 5 && (
-                      <motion.p
-                        initial={{ opacity: 0, x: -5 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
-                        style={{ marginTop: "1rem" }}
-                      >
-                        <span className="terminal_key">resume:</span>{" "}
-                        {downloadState === "idle" && (
-                          <button onClick={startDownload} className="terminal_download_btn">
-                            download_resume.sh
-                          </button>
-                        )}
-                        {downloadState === "loading" && (
-                          <span className="terminal_download_loading">
-                            Downloading [
-                            <span style={{ color: "#00D9FF" }}>
-                              {"=".repeat(progress / 10)}
-                              {" ".repeat(10 - progress / 10)}
-                            </span>
-                            ] {progress}%
-                          </span>
-                        )}
-                        {downloadState === "done" && (
-                          <span style={{ color: "#27c93f", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
-                            ✔ Complete
-                            <button 
-                              onClick={() => setDownloadState("idle")} 
-                              style={{ 
-                                background: "none", 
-                                border: "none", 
-                                color: "rgba(255,255,255,0.4)", 
-                                textDecoration: "underline", 
-                                fontSize: "11px", 
-                                cursor: "pointer",
-                                padding: 0
-                              }}
-                            >
-                              (Reset)
-                            </button>
-                          </span>
-                        )}
-                      </motion.p>
-                    )}
+                <div className="detail-item">
+                  <span className="detail-label">Experience</span>
+                  <span className="detail-value">3+ Years</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Primary Stack</span>
+                  <span className="detail-value">MERN & Next.js</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">AI / ML Focus</span>
+                  <span className="detail-value">Agents & RAG</span>
+                </div>
+              </div>
+
+              <div className="profile-divider" />
+
+              {/* Quick Interactive Contacts */}
+              <div className="profile-contact-list">
+                <a href={`mailto:${personal.email}`} className="contact-pill-item" title="Email me">
+                  <Mail size={14} />
+                  <span>Email</span>
+                </a>
+                <a href={`tel:${personal.phone}`} className="contact-pill-item" title="Call me">
+                  <Phone size={14} />
+                  <span>Call</span>
+                </a>
+                <a href={personal.github} target="_blank" rel="noopener noreferrer" className="contact-pill-item" title="GitHub Profile">
+                  <GithubIcon size={14} />
+                  <span>GitHub</span>
+                </a>
+                <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="contact-pill-item" title="LinkedIn Profile">
+                  <LinkedInIcon size={14} />
+                  <span>LinkedIn</span>
+                </a>
+              </div>
+
+              {/* Resume download action */}
+              <div style={{ marginTop: "1.5rem" }}>
+                {downloadState === "idle" && (
+                  <button onClick={startDownload} className="resume-download-btn">
+                    <Download size={14} />
+                    <span>Download Resume</span>
+                  </button>
+                )}
+                {downloadState === "loading" && (
+                  <div className="resume-download-loading-wrapper">
+                    <div className="loading-bar-bg">
+                      <div className="loading-bar-fill" style={{ width: `${progress}%` }} />
+                    </div>
+                    <span className="loading-percentage">Preparing Resume... {progress}%</span>
                   </div>
                 )}
-
-                {visibleLines >= 5 && (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.2 }}
-                    className="terminal_promt" 
-                    style={{ marginTop: "1rem" }}
-                  >
-                    <span className="terminal_user">aniketdange@admin:</span>
-                    <span className="terminal_location">~</span>
-                    <span className="terminal_bling">$</span>
-                    <span className="terminal_cursor" />
-                  </motion.div>
+                {downloadState === "done" && (
+                  <div className="resume-download-success">
+                    <span className="success-msg">
+                      <CheckCircle2 size={14} />
+                      Downloaded successfully
+                    </span>
+                    <button onClick={() => setDownloadState("idle")} className="reset-download-btn">
+                      Reset
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -617,7 +494,7 @@ export function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.2, duration: 1 }}
+        transition={{ delay: 1.8, duration: 1 }}
         style={{
           position: "absolute",
           bottom: "2rem",
@@ -643,144 +520,221 @@ export function Hero() {
         </span>
         <div className="scroll-line" />
       </motion.div>
+
       <style>{`
-        .terminal-card {
+        .profile-glass-card {
           width: 100%;
-          max-width: 480px;
-          height: 320px;
-          background: rgba(12, 12, 18, 0.85);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(16px);
+          max-width: 440px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-radius: 24px;
+          padding: 2.25rem;
+          box-shadow: 
+            0 30px 60px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .profile-glass-card:hover {
+          border-color: rgba(123, 94, 255, 0.2);
+          box-shadow: 
+            0 30px 60px rgba(0, 0, 0, 0.5),
+            0 0 40px rgba(123, 94, 255, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .profile-card-header {
+          display: flex;
+          align-items: center;
+          gap: 1.25rem;
+        }
+
+        .initials-badge {
+          width: 52px;
+          height: 52px;
+          border-radius: 16px;
+          background: linear-gradient(135deg, var(--violet), var(--cyan));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 8px 20px rgba(123, 94, 255, 0.25);
+        }
+
+        .initials-badge span {
+          font-family: "Space Grotesk", sans-serif;
+          font-weight: 700;
+          font-size: 1.15rem;
+          color: white;
+          letter-spacing: -0.05em;
+        }
+
+        .profile-name {
+          font-family: "Space Grotesk", sans-serif;
+          font-weight: 600;
+          font-size: 1.25rem;
+          color: var(--text-primary);
+          letter-spacing: -0.02em;
+          margin-bottom: 0.15rem;
+        }
+
+        .profile-title {
+          font-family: "Space Mono", monospace;
+          font-size: 0.72rem;
+          color: var(--cyan);
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+        }
+
+        .profile-divider {
+          height: 1px;
+          background: rgba(255, 255, 255, 0.06);
+          margin: 1.75rem 0;
+        }
+
+        .profile-details-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.25rem;
+        }
+
+        .detail-item {
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+        }
+
+        .detail-label {
+          font-family: "Space Mono", monospace;
+          font-size: 0.62rem;
+          color: var(--text-tertiary);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .detail-value {
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: var(--text-secondary);
+        }
+
+        .profile-contact-list {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.6rem;
+        }
+
+        .contact-pill-item {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.6rem 0.85rem;
           border-radius: 12px;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-          overflow: hidden;
-          margin: 0 auto;
-        }
-
-        .terminal_toolbar {
-          display: flex;
-          height: 35px;
-          align-items: center;
-          padding: 0 15px;
-          background: rgba(30, 30, 40, 0.9);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-          justify-content: space-between;
-        }
-
-        .butt {
-          display: flex;
-          align-items: center;
-        }
-
-        .btn {
-          height: 11px;
-          width: 11px;
-          border-radius: 50%;
-          margin-right: 6px;
-        }
-
-        .red { background: #ff5f56; }
-        .yellow { background: #ffbd2e; }
-        .green { background: #27c93f; }
-
-        .add_tab {
-          border: none;
-          color: rgba(255, 255, 255, 0.4);
-          background: transparent;
-          font-size: 16px;
-          cursor: pointer;
-        }
-
-        .user {
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 11px;
-          font-family: "Space Mono", monospace;
-        }
-
-        .terminal_body {
-          height: calc(100% - 35px);
-          padding: 15px;
-          font-family: "Space Mono", monospace;
-          font-size: 13px;
-          line-height: 1.6;
-          overflow-y: auto;
-          text-align: left;
-        }
-
-        .terminal_promt {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-        }
-
-        .terminal_promt span {
-          margin-right: 6px;
-        }
-
-        .terminal_user {
-          color: #7B5EFF;
-        }
-        .terminal_location {
-          color: #00D9FF;
-        }
-        .terminal_bling {
-          color: #fff;
-          opacity: 0.6;
-        }
-        .terminal_text {
-          color: #fff;
-        }
-
-        .terminal_content {
-          margin-top: 8px;
-          padding-left: 5px;
-        }
-        .terminal_content p {
-          margin: 4px 0;
-        }
-        .terminal_key {
-          color: rgba(255, 255, 255, 0.4);
-        }
-        .terminal_link {
-          color: #00D9FF;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.04);
+          color: var(--text-secondary);
           text-decoration: none;
-          transition: color 0.2s;
-        }
-        .terminal_link:hover {
-          color: #7B5EFF;
-          text-decoration: underline;
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 0.8rem;
+          font-weight: 500;
+          transition: all 0.2s;
         }
 
-        .terminal_download_btn {
+        .contact-pill-item:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.1);
+          color: var(--text-primary);
+          transform: translateY(-1px);
+        }
+
+        .resume-download-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.8rem;
+          border-radius: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
+          color: var(--text-primary);
+          font-family: "Space Grotesk", sans-serif;
+          font-weight: 600;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.25s;
+        }
+
+        .resume-download-btn:hover {
+          background: white;
+          color: var(--void);
+          border-color: white;
+          box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15);
+        }
+
+        .resume-download-loading-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .loading-bar-bg {
+          width: 100%;
+          height: 4px;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 100px;
+          overflow: hidden;
+        }
+
+        .loading-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--violet), var(--cyan));
+          border-radius: 100px;
+          transition: width 0.1s linear;
+        }
+
+        .loading-percentage {
+          font-family: "Space Mono", monospace;
+          font-size: 0.65rem;
+          color: var(--text-secondary);
+          text-align: center;
+        }
+
+        .resume-download-success {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.6rem 1rem;
+          border-radius: 14px;
+          background: rgba(0, 245, 160, 0.04);
+          border: 1px solid rgba(0, 245, 160, 0.15);
+        }
+
+        .success-msg {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 0.85rem;
+          color: var(--green);
+          font-weight: 500;
+        }
+
+        .reset-download-btn {
           background: none;
           border: none;
-          color: #ffbd2e;
-          font-family: "Space Mono", monospace;
-          font-size: 13px;
+          color: var(--text-tertiary);
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 0.75rem;
+          text-decoration: underline;
           cursor: pointer;
           padding: 0;
-          text-decoration: underline;
-          transition: color 0.2s;
-        }
-        .terminal_download_btn:hover {
-          color: #ffde59;
         }
 
-        .terminal_download_loading {
-          color: #ffbd2e;
-        }
-
-        .terminal_cursor {
-          display: inline-block;
-          width: 6px;
-          height: 13px;
-          background: #00D9FF;
-          animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
+        .reset-download-btn:hover {
+          color: var(--text-secondary);
         }
 
         @media (max-width: 960px) {
@@ -793,9 +747,6 @@ export function Hero() {
           .hero-left {
             align-items: center !important;
             text-align: center !important;
-          }
-          .hero-left div {
-            align-self: center !important;
           }
         }
       `}</style>
